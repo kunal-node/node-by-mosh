@@ -8,6 +8,8 @@ const courses = [
   { id: 3, name: "course3" },
 ];
 
+app.use(express.json());
+
 app.get("/", (req, res) => {
   res.send("Hello World");
 });
@@ -22,6 +24,16 @@ app.get("/api/courses/:id", (req, res) => {
     res.status(404).send("Course with given id was not found...");
   }
   res.send(course);
+});
+
+app.post("/api/courses", (req, res) => {
+  const name = req.body.name;
+  const course = {
+    id: courses.length + 1,
+    name,
+  };
+  courses.push(course);
+  res.status(201).send(course);
 });
 
 app.listen(PORT, () => console.log(`Listening on ${PORT}`));
