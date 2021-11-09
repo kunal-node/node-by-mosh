@@ -1,7 +1,7 @@
 const express = require("express");
-const Joi = require("joi");
 const app = express();
 require("dotenv").config();
+const utils = require("./utils");
 const PORT = process.env.PORT || 3000;
 const courses = [
   { id: 1, name: "course1" },
@@ -28,23 +28,36 @@ app.get("/api/courses/:id", (req, res) => {
 });
 
 app.post("/api/courses", (req, res) => {
-  const name = req.body.name;
-  const schema = Joi.object({
-    name: Joi.string().min(3).required(),
-  });
-
-  const result = schema.validate(req.body);
-  if (result.error) {
-    res.status(400).send(result.error.details[0].message);
+  const { error } = utils.validateCourse(req.body);
+  if (error) {
+    res.status(400).send(error.details[0].message);
     return;
   }
 
   const course = {
     id: courses.length + 1,
-    name,
+    name: req.body.name,
   };
   courses.push(course);
   res.status(201).send(course);
+});
+
+app.put("/api/courses/:id", (req, res) => {
+  //check if course exists, if not, 404.
+  const course = courses.find((course) => course.id === +req.params.id);
+  if (!course) {
+    return res.status(404).send("Course with given id was not found...");
+  }
+
+  //validate input, if invalid, 400.
+  const { error } = utils.validateCourse(req.body);
+  if (error) {
+    return res.status(400).send(error.details[0].message);
+  }
+
+  //valid course, then update.
+  course.name = req.body.name;
+  res.send(course);
 });
 
 app.listen(PORT, () => console.log(`Listening on ${PORT}`));
