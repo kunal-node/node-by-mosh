@@ -1,6 +1,8 @@
 const express = require("express");
 const app = express();
 require("dotenv").config();
+const auth = require("./middleware/auth");
+const logger = require("./middleware/logger");
 const utils = require("./utils");
 const PORT = process.env.PORT || 3000;
 const courses = [
@@ -10,6 +12,8 @@ const courses = [
 ];
 
 app.use(express.json());
+app.use(logger);
+app.use(auth);
 
 app.get("/", (req, res) => {
   res.send("Hello World");
