@@ -14,6 +14,7 @@ const courses = [
 app.use(express.json());
 //To parse the form(post method) urlencoded data into json, and put it in req.body.
 app.use(express.urlencoded({ extended: true }));
+app.use(express.static("public"));
 app.use(logger);
 app.use(auth);
 
