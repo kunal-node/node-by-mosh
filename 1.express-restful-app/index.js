@@ -2,6 +2,7 @@ const express = require("express");
 const app = express();
 require("dotenv").config();
 const helmet = require("helmet");
+const morgan = require("morgan");
 const auth = require("./middleware/auth");
 const logger = require("./middleware/logger");
 const utils = require("./utils");
@@ -19,6 +20,7 @@ app.use(express.static("public"));
 
 //Third party middleware
 app.use(helmet());
+app.use(morgan("tiny"));
 
 //Custom middleware
 app.use(logger);
