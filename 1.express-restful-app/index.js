@@ -22,7 +22,7 @@ app.get("/api/courses", (req, res) => {
 app.get("/api/courses/:id", (req, res) => {
   const course = courses.find((course) => course.id === +req.params.id);
   if (!course) {
-    res.status(404).send("Course with given id was not found...");
+    return res.status(404).send("Course with given id was not found...");
   }
   res.send(course);
 });
@@ -57,6 +57,20 @@ app.put("/api/courses/:id", (req, res) => {
 
   //valid course, then update.
   course.name = req.body.name;
+  res.send(course);
+});
+
+app.delete("/api/courses/:id", (req, res) => {
+  //check if course exists, if not, 404.
+  const course = courses.find((course) => course.id === +req.params.id);
+  if (!course) {
+    return res.status(404).send("Course with given id was not found...");
+  }
+
+  //delete course
+  const courseIdx = courses.indexOf(course);
+  courses.splice(courseIdx, 1);
+
   res.send(course);
 });
 
