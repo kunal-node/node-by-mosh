@@ -1,6 +1,7 @@
 const express = require("express");
 const app = express();
 require("dotenv").config();
+const helmet = require("helmet");
 const auth = require("./middleware/auth");
 const logger = require("./middleware/logger");
 const utils = require("./utils");
@@ -15,6 +16,11 @@ app.use(express.json());
 //To parse the form(post method) urlencoded data into json, and put it in req.body.
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static("public"));
+
+//Third party middleware
+app.use(helmet());
+
+//Custom middleware
 app.use(logger);
 app.use(auth);
 
