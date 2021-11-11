@@ -1,3 +1,4 @@
+require("dotenv").config();
 const express = require("express");
 const app = express();
 require("dotenv").config();
@@ -20,7 +21,12 @@ app.use(express.static("public"));
 
 //Third party middleware
 app.use(helmet());
-app.use(morgan("tiny"));
+
+//if NODE_ENV is not set, app.get("env") by default return development.
+if (app.get("env") === "development") {
+  console.log("morgan enabled...");
+  app.use(morgan("tiny"));
+}
 
 //Custom middleware
 app.use(logger);
